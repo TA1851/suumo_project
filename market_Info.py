@@ -16,23 +16,24 @@ def setup_driver():
     driver.get('https://suumo.jp/jj/chintai/kensaku/FR301FB036/?ar=010&bs=040&ra=001&ek=00790&ts=2&et=10&cn=5')
     return driver
 
+# ドロップダウンメニューを選択する関数
 def select_dropdown_option(driver, dropdown_name, option_text):
     WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.NAME, dropdown_name))).click()
     dropdown = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.NAME, dropdown_name)))
     dropdown.find_element(By.XPATH, f"//option[. = '{option_text}']").click()
-
+# 相場情報ボタンをクリックする関数
 def click_button(driver, button_text):
     WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.LINK_TEXT, button_text))).click()
-
+# 家賃相場を抽出する関数
 def extract_data(driver):
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     rows = soup.find_all('tr')
     data = [[cell.text.strip() for cell in row.find_all('td')] for row in rows]
     return pd.DataFrame(data)
-
+# 家賃相場をCSVファイルに保存する関数
 def save_data_to_csv(df, filename):
     if not df.empty:
         df.to_csv(filename, index=False, header=True)
@@ -56,3 +57,4 @@ df = extract_data(driver)
 save_data_to_csv(df, 'suumo_2.csv')
 
 driver.quit()
+build_age = soup.find_all(class_='cassetteitem_detail-col3')
